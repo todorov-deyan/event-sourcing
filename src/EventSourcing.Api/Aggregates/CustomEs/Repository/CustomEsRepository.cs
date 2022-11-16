@@ -37,7 +37,6 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                     EventType = @event.GetType().Name.ToLowerInvariant()
                 };
 
-
                 stream.Events.Add(ce);
             }
 
