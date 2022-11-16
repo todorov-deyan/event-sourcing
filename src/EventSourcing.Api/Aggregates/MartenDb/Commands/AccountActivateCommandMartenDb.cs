@@ -9,23 +9,24 @@ using EventSourcing.Api.Common.EventSourcing;
 
 namespace EventSourcing.Api.Aggregates.MartenDb.Commands
 {
-    public record AccountDeactivateCommand(Guid Id, AccountDeactivateRequest CreateRequest) : ICommandRequest<Result<Account>>;
+    public record AccountActivateCommandMartenDb(Guid Id, AccountActivateRequestMartenDb ActivateRequest) : ICommandRequest<Result<Account>>;
 
-    public class AccountDeactivateCommandHandler : ICommandHandler<AccountDeactivateCommand, Result<Account>>
+    public class AccountActivateCommandMartenDbHandler : ICommandHandler<AccountActivateCommandMartenDb, Result<Account>>
     {
         private readonly IMartenRepository<Account> _repository;
 
-        public AccountDeactivateCommandHandler(IMartenRepository<Account> repository)
+        public AccountActivateCommandMartenDbHandler(IMartenRepository<Account> repository)
         {
             _repository = repository;
         }
 
-        public async Task<Result<Account>> Handle(AccountDeactivateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Account>> Handle(AccountActivateCommandMartenDb request, CancellationToken cancellationToken)
         {
             var newAccount = new Account();
          
-            AccountDeactivated accountCreated = new()
-            {   
+            AccountActivated accountCreated = new()
+            {
+                Balance = 10,
             };
             
             await _repository.Update(

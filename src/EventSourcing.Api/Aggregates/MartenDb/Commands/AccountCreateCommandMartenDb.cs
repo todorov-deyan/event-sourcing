@@ -9,18 +9,18 @@ using EventSourcing.Api.Common.EventSourcing;
 
 namespace EventSourcing.Api.Aggregates.MartenDb.Commands
 {
-    public record AccountCreateCommand(AccountCreateRequest CreateRequest) : ICommandRequest<Result<Account>>;
+    public record AccountCreateCommandMartenDb(AccountCreateRequestMartenDb CreateRequest) : ICommandRequest<Result<Account>>;
 
-    public class AccountCreateCommandHandler : ICommandHandler<AccountCreateCommand, Result<Account>>
+    public class AccountCreateMartenDbCommandHandler : ICommandHandler<AccountCreateCommandMartenDb, Result<Account>>
     {
         private readonly IMartenRepository<Account> _repository;
 
-        public AccountCreateCommandHandler(IMartenRepository<Account> repository)
+        public AccountCreateMartenDbCommandHandler(IMartenRepository<Account> repository)
         {
             _repository = repository;
         }
 
-        public async Task<Result<Account>> Handle(AccountCreateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Account>> Handle(AccountCreateCommandMartenDb request, CancellationToken cancellationToken)
         {
             var newAccount = new Account();
          
@@ -33,7 +33,11 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Commands
                 newAccount, 
                 new List<IEventState>() { accountCreated }, 
                 cancellationToken: cancellationToken);
-            
+
+            newAccount.Owner = accountCreated.Owner;
+            newAccount.Balance = request.CreateRequest.Balance;
+            newAccount.Status = AccountStatus.Created;
+
             return Result.Success(newAccount);
         }
     }
