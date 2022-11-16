@@ -24,7 +24,7 @@ namespace EventSourcing.Api.Controllers
         }
 
 
-        [HttpGet("{accountId:guid}", Name = "GetAccount")]
+        [HttpGet("{accountId:guid}", Name = "GetAccountCustomEs")]
         public async Task<ActionResult<Account>> Get(Guid accountId, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -38,7 +38,7 @@ namespace EventSourcing.Api.Controllers
         }
 
 
-        [HttpPost(Name = "CreateAccount")]
+        [HttpPost(Name = "CreateAccountCustomEs")]
         public async Task<ActionResult> Post(AccountCreateRequestCustomEs createAccount, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
