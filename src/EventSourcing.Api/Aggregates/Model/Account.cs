@@ -5,11 +5,11 @@ namespace EventSourcing.Api.Aggregates.Model
 {
     public class Account : Aggregate
     {
-        public string Owner { get; private set; }
+        public string Owner { get; set; }
 
-        public decimal Balance { get; private set; }
+        public decimal Balance { get; set; }
 
-        public AccountStatus Status { get; private set; }
+        public AccountStatus Status { get; set; }
 
         public Account()
         {

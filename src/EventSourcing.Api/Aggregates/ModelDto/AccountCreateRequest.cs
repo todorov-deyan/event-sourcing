@@ -1,6 +1,6 @@
-﻿namespace EventSourcing.Api.Aggregates.MartenDb.ModelDto
+﻿namespace EventSourcing.Api.Aggregates.ModelDto
 {
-    public class AccountDeactivateRequest
+    public abstract class AccountCreateRequest
     {
         public string Owner { get; set; }
 
