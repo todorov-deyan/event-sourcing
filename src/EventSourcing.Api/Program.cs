@@ -1,13 +1,14 @@
 
+using EventSourcing.Api.Aggregates.CustomEs.Repository;
+using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using MediatR;
-using Marten.Events.Daemon.Resiliency;
+
 using Marten;
 using Marten.Events.Projections;
+
+using MediatR;
+
 using Weasel.Core;
-using EventSourcing.Api.Aggregates.MartenDb.Repository;
 
 namespace EventSourcing.Api
 {
@@ -41,13 +42,14 @@ namespace EventSourcing.Api
 
                 opt.Connection(connString);
 
-                opt.DatabaseSchemaName = "eventsourcing";
+                opt.DatabaseSchemaName = "martendb_event_sourcing";
 
                 opt.Projections.SelfAggregate<Account>(ProjectionLifecycle.Live);
             });
 
             //Repositories
             builder.Services.AddScoped<IMartenRepository<Account>, MartenRepository<Account>>();
+            builder.Services.AddScoped<ICustomEsRepository<Account>, CustomEsRepository<Account>>();
 
             var app = builder.Build();
 

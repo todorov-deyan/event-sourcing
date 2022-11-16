@@ -17,8 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Aggregates\CustomEs\Model\" />
-    <Folder Include="Aggregates\CustomEs\NewFolder\" />
+    <Folder Include="Aggregates\CustomEs\Events\" />
+    <Folder Include="Aggregates\CustomEs\Validators\" />
+    <Folder Include="Aggregates\CustomEs\Queries\" />
   </ItemGroup>
 
 </Project>
