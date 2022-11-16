@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace EventSourcing.Api.Aggregates.MartenDb.Validators
 {
-    public class AccountCreateRequestValidator : AbstractValidator<AccountCreateRequest>
+    public class AccountCreateRequestValidator : AbstractValidator<AccountCreateRequestMartenDb>
     {
         public AccountCreateRequestValidator()
         {
