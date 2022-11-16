@@ -9,7 +9,5 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Repository
         Task Add(T aggregate, IList<IEventState> events, CancellationToken cancellationToken = default);
 
         Task Update(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default);
-
-        Task Delete(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default);
     }
 }

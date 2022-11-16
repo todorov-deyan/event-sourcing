@@ -31,7 +31,10 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                 var ce = new CustomEvent
                 {
                     StreamId = stream.StreamId,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    Data = "{}", // TODO
+                    EventId = Guid.NewGuid(),
+                    EventType = @event.GetType().Name.ToLowerInvariant()
                 };
 
 
@@ -41,6 +44,11 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
             _dbContext.Add(stream);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task<T?> Find(Guid id, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }
