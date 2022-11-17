@@ -1,6 +1,6 @@
 ﻿using EventSourcing.Api.Aggregates.CustomEs.ModelDto;
-using EventSourcing.Api.Aggregates.MartenDb.Commands;
-using EventSourcing.Api.Aggregates.MartenDb.Queries;
+using EventSourcing.Api.Aggregates.CustomEs.Commands;
+using EventSourcing.Api.Aggregates.CustomEs.Queries;
 using EventSourcing.Api.Aggregates.Model;
 
 using MediatR;

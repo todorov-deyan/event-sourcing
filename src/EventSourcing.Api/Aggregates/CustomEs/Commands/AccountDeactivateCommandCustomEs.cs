@@ -7,7 +7,7 @@ using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.CQRS;
 using EventSourcing.Api.Common.EventSourcing;
 
-namespace EventSourcing.Api.Aggregates.MartenDb.Commands
+namespace EventSourcing.Api.Aggregates.CustomEs.Commands
 {
     public record AccountDeactivateCommandCustomEs(Guid Id, AccountDeactivateRequestCustomEs CreateRequest) : ICommandRequest<Result<Account>>;
 
@@ -23,16 +23,16 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Commands
         public async Task<Result<Account>> Handle(AccountDeactivateCommandCustomEs request, CancellationToken cancellationToken)
         {
             var newAccount = new Account();
-         
+
             AccountDeactivated accountCreated = new()
-            {   
+            {
             };
-            
+
             await _repository.Update(
-                request.Id, 
-                new List<IEventState>() { accountCreated }, 
+                request.Id,
+                new List<IEventState>() { accountCreated },
                 cancellationToken: cancellationToken);
-            
+
             return Result.Success(newAccount);
         }
     }

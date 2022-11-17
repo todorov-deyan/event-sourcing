@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Aggregates\CustomEs\Events\" />
     <Folder Include="Aggregates\CustomEs\Validators\" />
-    <Folder Include="Aggregates\CustomEs\Queries\" />
   </ItemGroup>
 
 </Project>

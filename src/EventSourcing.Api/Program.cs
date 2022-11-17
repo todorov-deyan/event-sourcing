@@ -3,7 +3,7 @@ using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common;
-
+using EventSourcing.Api.Common.EventSourcing;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Marten;
@@ -11,6 +11,7 @@ using Marten.Events.Projections;
 
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Weasel.Core;
 
 namespace EventSourcing.Api
@@ -38,6 +39,14 @@ namespace EventSourcing.Api
 
             var connString = builder.Configuration.GetConnectionString(Constants.DbConnection);
 
+            //Event Sourcing Events
+            builder.Services.AddScoped<IEventSerializer>(x => {
+                var serializer = new JsonEventSerializer();
+                serializer.ScanEvents(Assembly.GetExecutingAssembly());
+                return serializer;
+            });
+
+            //PosgreeDB
             builder.Services.AddDbContext<CustomEsDbContext>(cfg => cfg.UseNpgsql(connString));
 
             //MartenDB
