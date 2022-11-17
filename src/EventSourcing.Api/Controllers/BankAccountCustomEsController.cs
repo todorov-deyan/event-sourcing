@@ -1,4 +1,5 @@
 ﻿using EventSourcing.Api.Aggregates.CustomEs.ModelDto;
+using EventSourcing.Api.Aggregates.CustomEs.Queries;
 using EventSourcing.Api.Aggregates.MartenDb.Commands;
 using EventSourcing.Api.Aggregates.MartenDb.Queries;
 using EventSourcing.Api.Aggregates.Model;
@@ -30,11 +31,11 @@ namespace EventSourcing.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var account = await _mediator.Send(new GetAccountByIdQuery(accountId), cancellationToken);
+            var account = await _mediator.Send(new GetAccountByIdCustomEs(accountId), cancellationToken);
             if (!account.IsSuccess)
                 return NotFound();
 
-            return Ok(account);
+            return Ok(account.Value);
         }
 
 
