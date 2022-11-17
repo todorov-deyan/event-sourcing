@@ -72,8 +72,8 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
 
         public async Task<T?> Find(Guid id, CancellationToken cancellationToken)
         {
-            var stream =  _dbContext.Streams.Include(x=>x.Events).FirstOrDefault(x => x.StreamId == id);
-          
+            var stream = _dbContext.Streams.Include(x => x.Events).FirstOrDefault(x => x.StreamId == id);
+
             if (stream == null)
                 throw new ArgumentNullException(nameof(CustomStream));
 
@@ -87,13 +87,13 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                 switch (@event.EventType)
                 {
                     case "accountcreated":
-                        @eventState = _eventSerializer.FromJSON<AccountCreated>(@event.Data);
+                        @eventState = _serializer.Deserialize<AccountCreated>(@event.Data);
                         break;
                     case "accountactivated":
-                        @eventState = _eventSerializer.FromJSON<AccountActivated>(@event.Data);
+                        @eventState = _serializer.Deserialize<AccountActivated>(@event.Data);
                         break;
                     case "accountdeactivated":
-                        @eventState = _eventSerializer.FromJSON<AccountDeactivated>(@event.Data);
+                        @eventState = _serializer.Deserialize<AccountDeactivated>(@event.Data);
                         break;
 
                     default:
@@ -105,6 +105,8 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
             }
 
             return aggregate;
+        }
+
         public async Task<T?> FindReflection(Guid id, CancellationToken cancellationToken)
         {
             var stream =  _dbContext.Streams.Include(x => x.Events).FirstOrDefault(x => x.StreamId == id);
