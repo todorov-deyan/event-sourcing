@@ -24,16 +24,16 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Commands
         public async Task<Result<Account>> Handle(AccountDeactivateCommandCustomEs request, CancellationToken cancellationToken)
         {
             var newAccount = new Account();
-         
+
             AccountDeactivated accountCreated = new()
-            {   
+            {
             };
-            
+
             await _repository.Update(
-                request.Id, 
-                new List<IEventState>() { accountCreated }, 
+                request.Id,
+                new List<IEventState>() { accountCreated },
                 cancellationToken: cancellationToken);
-            
+
             return Result.Success(newAccount);
         }
     }

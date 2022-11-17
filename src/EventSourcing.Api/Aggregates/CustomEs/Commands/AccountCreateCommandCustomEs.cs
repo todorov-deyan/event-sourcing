@@ -22,21 +22,19 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Commands
 
         public async Task<Result<Account>> Handle(AccountCreateCommandCustomEs request, CancellationToken cancellationToken)
         {
-            var newAccount = new Account();
-         
             AccountCreated accountCreated = new()
             {
                 Owner = request.CreateRequest.Owner,
             };
 
+            var newAccount = new Account();
             newAccount.Owner = accountCreated.Owner;
             newAccount.Balance = request.CreateRequest.Balance;
             newAccount.Status = AccountStatus.Created;
-            
-            await _repository.Add(
-                newAccount, 
-                new List<IEventState>() { accountCreated }, 
-                cancellationToken: cancellationToken);
+
+            await _repository.Add(newAccount,
+                                  new List<IEventState>() { accountCreated },
+                                  cancellationToken: cancellationToken);
 
             return Result.Success(newAccount);
         }
