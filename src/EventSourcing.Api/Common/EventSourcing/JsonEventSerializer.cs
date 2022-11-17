@@ -1,7 +1,8 @@
 ﻿using EventSourcing.Api.Common.CQRS;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace EventSourcing.Api.Common.EventSourcing
 {
@@ -24,24 +25,30 @@ namespace EventSourcing.Api.Common.EventSourcing
             }
         }
 
-        public IEventState DeserializeEvent(string eventType, string jsonData)
+        public IEventState? DeserializeEvent(string eventType, string jsonData)
         {
             Type eType = _eventTypes.ContainsKey(eventType) ? _eventTypes[eventType] : null;
 
-            return (IEventState)this.GetType()
+            return (IEventState?)this.GetType()
                                     .GetMethod("Deserialize")
                                     .MakeGenericMethod(eType)
                                     .Invoke(this, new object[] { jsonData });
         }
 
-        public T Deserialize<T>(string jsonData) where T : IEventState
+
+        public T? Deserialize<T>(string jsonData) where T : IEventState
         {
-            return JsonSerializer.Deserialize<T>(jsonData);
+            //return JsonSerializer.Deserialize<T>(jsonData);
+
+            return JsonConvert.DeserializeObject<T>(jsonData);
         }
 
         public string Serialize<T>(T @event) where T : IEventState
         {
-            return JsonSerializer.Serialize(@event);
+            
+            //return JsonSerializer.Serialize(@event);
+
+            return JsonConvert.SerializeObject(@event);
         }
 
         
