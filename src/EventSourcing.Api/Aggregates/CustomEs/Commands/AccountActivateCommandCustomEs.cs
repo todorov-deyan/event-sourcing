@@ -7,7 +7,7 @@ using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.CQRS;
 using EventSourcing.Api.Common.EventSourcing;
 
-namespace EventSourcing.Api.Aggregates.MartenDb.Commands
+namespace EventSourcing.Api.Aggregates.CustomEs.Commands
 {
     public record AccountActivateCommandCustomEs(Guid Id, AccountActivateRequestCustomEs ActivateRequest) : ICommandRequest<Result<Account>>;
 
@@ -26,7 +26,7 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Commands
          
             AccountActivated accountCreated = new()
             {
-                Balance = 10,
+                Balance = request.ActivateRequest.Balance,
             };
             
             await _repository.Update(

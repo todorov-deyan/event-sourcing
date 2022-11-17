@@ -3,7 +3,7 @@ using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common;
-
+using EventSourcing.Api.Common.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Marten;
@@ -55,6 +55,7 @@ namespace EventSourcing.Api
             //Repositories
             builder.Services.AddScoped<IMartenRepository<Account>, MartenRepository<Account>>();
             builder.Services.AddScoped<ICustomEsRepository<Account>, CustomEsRepository<Account>>();
+            builder.Services.AddScoped<IEventSerializer, EventSerializer>();
 
             var app = builder.Build();
 

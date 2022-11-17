@@ -20,6 +20,6 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository.Entities
         [Column("type")]
         public string Type { get; set; }
 
-        public ICollection<CustomEvent> Events { get; set; }
+        public virtual ICollection<CustomEvent> Events { get; set; }
     }
 }
