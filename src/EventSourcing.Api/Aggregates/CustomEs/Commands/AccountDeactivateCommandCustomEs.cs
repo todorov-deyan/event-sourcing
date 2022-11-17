@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 
 using EventSourcing.Api.Aggregates.CustomEs.ModelDto;
+using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
@@ -13,9 +14,9 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Commands
 
     public class AccountDeactivateCustomEsCommandHandler : ICommandHandler<AccountDeactivateCommandCustomEs, Result<Account>>
     {
-        private readonly IMartenRepository<Account> _repository;
+        private readonly ICustomEsRepository<Account> _repository;
 
-        public AccountDeactivateCustomEsCommandHandler(IMartenRepository<Account> repository)
+        public AccountDeactivateCustomEsCommandHandler(ICustomEsRepository<Account> repository)
         {
             _repository = repository;
         }

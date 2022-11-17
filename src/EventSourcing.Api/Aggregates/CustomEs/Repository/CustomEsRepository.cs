@@ -9,7 +9,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
         private readonly CustomEsDbContext _dbContext;
         private readonly IEventSerializer _serializer;
 
-        public CustomEsRepository(CustomEsDbContext dbContext, IEventSerializer serializer)
+        public CustomEsRepository(CustomEsDbContext dbContext)
         {
             _dbContext = dbContext;
             this._serializer = serializer;
@@ -17,10 +17,10 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
 
         public async Task Update(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default)
         {
-            var stream = await _dbContext.FindAsync<CustomStream>(id);
+            var stream = await  _dbContext.Streams.FindAsync(id);
 
-            if (stream is null)
-                throw new ArgumentException(nameof(CustomStream));
+            if (stream == null)
+                throw new NullReferenceException();
 
             foreach (var @event in events)
             {
@@ -28,7 +28,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                 {
                     StreamId = stream.StreamId,
                     CreatedAt = DateTime.UtcNow,
-                    Data = _serializer.Serialize(@event),
+                    Data = _eventSerializer.ToJSON(@event),
                     EventId = Guid.NewGuid(),
                     EventType = @event.GetType().Name.ToLowerInvariant()
                 };
@@ -56,7 +56,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                     CreatedAt = DateTime.UtcNow,
                     Data = _serializer.Serialize(@event), 
                     EventId = Guid.NewGuid(),
-                    EventType = @event.GetType().Name.ToLowerInvariant()
+                    EventType = @event.GetType().Name.ToLowerInvariant(),
                 };
 
                 stream.Events.Add(ce);
