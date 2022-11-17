@@ -14,7 +14,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository.Entities
 
         [Column("stream_id")]
         public Guid StreamId { get; set; }
-
+       
         public virtual CustomStream Stream { get; set; }
 
         [Column("data", TypeName = "jsonb")]
