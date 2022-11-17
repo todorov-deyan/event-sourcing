@@ -1,5 +1,5 @@
-﻿using EventSourcing.Api.Aggregates.CustomEs.ModelDto;
-using EventSourcing.Api.Aggregates.MartenDb.Commands;
+﻿using EventSourcing.Api.Aggregates.CustomEs.Commands;
+using EventSourcing.Api.Aggregates.CustomEs.ModelDto;
 using EventSourcing.Api.Aggregates.MartenDb.Queries;
 using EventSourcing.Api.Aggregates.Model;
 
@@ -45,6 +45,32 @@ namespace EventSourcing.Api.Controllers
                 return BadRequest();
 
             var account = await _mediator.Send(new AccountCreateCommandCustomEs(createAccount), cancellationToken);
+            if (!account.IsSuccess)
+                return BadRequest();
+
+            return CreatedAtAction("Get", new { accountId = account.Value.Id }, account.Value);
+        }
+
+        [HttpPut("ActivateAccountCustomEs/{id}")]
+        public async Task<ActionResult> ActivateAccountCustomEs(Guid id, AccountActivateRequestCustomEs activateAccount, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var account = await _mediator.Send(new AccountActivateCommandCustomEs(id, activateAccount), cancellationToken);
+            if (!account.IsSuccess)
+                return BadRequest();
+
+            return CreatedAtAction("Get", new { accountId = account.Value.Id }, account.Value);
+        }
+
+        [HttpPut("DeactivateAccountCustomEs/{id}")]
+        public async Task<ActionResult> DeactivateAccountCustomEs(Guid id, AccountDeactivateRequestCustomEs deactivateAccount, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var account = await _mediator.Send(new AccountDeactivateCommandCustomEs(id, deactivateAccount), cancellationToken);
             if (!account.IsSuccess)
                 return BadRequest();
 
