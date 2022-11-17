@@ -10,7 +10,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
     public class CustomEsRepository<T> : ICustomEsRepository<T> where T : class, IAggregate, new()
     {
         private readonly CustomEsDbContext _dbContext;
-        private IEventSerializer _eventSerializer;
+        private readonly IEventSerializer _eventSerializer;
 
         public CustomEsRepository(CustomEsDbContext dbContext, IEventSerializer eventSerializer)
         {
@@ -18,9 +18,28 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
             _eventSerializer = eventSerializer;
         }
 
-        public Task Update(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default)
+        public async Task Update(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var stream = await  _dbContext.Streams.FindAsync(id);
+
+            if (stream == null)
+                throw new NullReferenceException();
+
+            foreach (var @event in events)
+            {
+                var ce = new CustomEvent
+                {
+                    StreamId = stream.StreamId,
+                    CreatedAt = DateTime.UtcNow,
+                    Data = _eventSerializer.ToJSON(@event),
+                    EventId = Guid.NewGuid(),
+                    EventType = @event.GetType().Name.ToLowerInvariant()
+                };
+
+                _dbContext.Events.Add(ce);
+            }
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task Add(T aggregate, IList<IEventState> events, CancellationToken cancellationToken = default)
@@ -40,7 +59,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                     CreatedAt = DateTime.UtcNow,
                     Data = _eventSerializer.ToJSON(@event),
                     EventId = Guid.NewGuid(),
-                    EventType = @event.GetType().Name.ToLowerInvariant()
+                    EventType = @event.GetType().Name.ToLowerInvariant(),
                 };
 
                 stream.Events.Add(ce);

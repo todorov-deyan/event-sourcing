@@ -7,7 +7,7 @@ using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.CQRS;
 using EventSourcing.Api.Common.EventSourcing;
 
-namespace EventSourcing.Api.Aggregates.MartenDb.Commands
+namespace EventSourcing.Api.Aggregates.CustomEs.Commands
 {
     public record AccountCreateCommandCustomEs(AccountCreateRequestCustomEs CreateRequest) : ICommandRequest<Result<Account>>;
 
@@ -28,15 +28,15 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Commands
             {
                 Owner = request.CreateRequest.Owner,
             };
+
+            newAccount.Owner = accountCreated.Owner;
+            newAccount.Balance = request.CreateRequest.Balance;
+            newAccount.Status = AccountStatus.Created;
             
             await _repository.Add(
                 newAccount, 
                 new List<IEventState>() { accountCreated }, 
                 cancellationToken: cancellationToken);
-
-            newAccount.Owner = accountCreated.Owner;
-            newAccount.Balance = request.CreateRequest.Balance;
-            newAccount.Status = AccountStatus.Created;
 
             return Result.Success(newAccount);
         }
