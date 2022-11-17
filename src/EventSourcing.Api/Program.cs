@@ -4,6 +4,7 @@ using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common;
 using EventSourcing.Api.Common.EventSourcing;
+using EventSourcing.Api.Common.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Marten;
@@ -40,11 +41,7 @@ namespace EventSourcing.Api
             var connString = builder.Configuration.GetConnectionString(Constants.DbConnection);
 
             //Event Sourcing Events
-            builder.Services.AddScoped<IEventSerializer>(x => {
-                var serializer = new JsonEventSerializer();
-                serializer.ScanEvents(Assembly.GetExecutingAssembly());
-                return serializer;
-            });
+            builder.Services.AddEventJsonSerializer();
 
             //PosgreeDB
             builder.Services.AddDbContext<CustomEsDbContext>(cfg => cfg.UseNpgsql(connString));
