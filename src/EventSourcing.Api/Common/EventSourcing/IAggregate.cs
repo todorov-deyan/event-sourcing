@@ -4,9 +4,9 @@
     {
     }
 
-    public interface IAggregate<out T>
+    public interface IAggregate<T>
     {
-        T Id { get; }
+        T Id { get; set; }
 
         int Version { get; }
 

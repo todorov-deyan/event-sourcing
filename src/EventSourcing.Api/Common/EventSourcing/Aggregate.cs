@@ -2,7 +2,7 @@
 {
     public abstract class Aggregate : IAggregate
     {
-        public Guid Id { get; protected set; }
+        public Guid Id { get; set; }
 
         public int Version { get; }
 
