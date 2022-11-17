@@ -9,7 +9,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
         private readonly CustomEsDbContext _dbContext;
         private readonly IEventSerializer _serializer;
 
-        public CustomEsRepository(CustomEsDbContext dbContext)
+        public CustomEsRepository(CustomEsDbContext dbContext, IEventSerializer serializer)
         {
             _dbContext = dbContext;
             this._serializer = serializer;
@@ -28,7 +28,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
                 {
                     StreamId = stream.StreamId,
                     CreatedAt = DateTime.UtcNow,
-                    Data = _eventSerializer.ToJSON(@event),
+                    Data = _serializer.Serialize(@event),
                     EventId = Guid.NewGuid(),
                     EventType = @event.GetType().Name.ToLowerInvariant()
                 };

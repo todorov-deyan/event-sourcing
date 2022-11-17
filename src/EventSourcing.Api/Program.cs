@@ -64,7 +64,6 @@ namespace EventSourcing.Api
             //Repositories
             builder.Services.AddScoped<IMartenRepository<Account>, MartenRepository<Account>>();
             builder.Services.AddScoped<ICustomEsRepository<Account>, CustomEsRepository<Account>>();
-            builder.Services.AddScoped<IEventSerializer, EventSerializer>();
 
             var app = builder.Build();
 
