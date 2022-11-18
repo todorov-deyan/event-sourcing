@@ -25,12 +25,11 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Commands
             AccountCreated accountCreated = new()
             {
                 Owner = request.CreateRequest.Owner,
+                Balance = request.CreateRequest.Balance,
+                Description = request.CreateRequest.Description,
             };
 
             var newAccount = new Account();
-            newAccount.Owner = accountCreated.Owner;
-            newAccount.Balance = request.CreateRequest.Balance;
-            newAccount.Status = AccountStatus.Created;
 
             await _repository.Add(newAccount,
                                   new List<IEventState>() { accountCreated },
