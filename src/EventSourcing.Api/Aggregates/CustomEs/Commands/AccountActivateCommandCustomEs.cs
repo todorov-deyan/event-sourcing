@@ -27,6 +27,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Commands
             AccountActivated accountCreated = new()
             {
                 Balance = request.ActivateRequest.Balance,
+                Description = request.ActivateRequest.Description,
             };
 
             await _repository.Update(

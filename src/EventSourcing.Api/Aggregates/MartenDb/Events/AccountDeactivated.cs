@@ -12,5 +12,8 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Events
         public DateTimeOffset CreatedAt { get; init; }
 
         public decimal ClosingBalance { get; set; } = 0;
+
+        public string Description { get; set; }
+
     }
 }

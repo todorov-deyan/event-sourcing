@@ -19,6 +19,7 @@ namespace EventSourcing.Api.Aggregates.Model
         public void Apply(AccountCreated @event)
         {
             Owner = @event.Owner;
+            Balance = @event.Balance;
             Status = AccountStatus.Created;
         }
 

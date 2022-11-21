@@ -1,9 +1,7 @@
 ﻿using Ardalis.Result;
-
 using EventSourcing.Api.Aggregates.CustomEs.ModelDto;
 using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
-using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.CQRS;
 using EventSourcing.Api.Common.EventSourcing;
@@ -27,6 +25,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Commands
 
             AccountDeactivated accountCreated = new()
             {
+                Description = request.CreateRequest.Description
             };
 
             await _repository.Update(

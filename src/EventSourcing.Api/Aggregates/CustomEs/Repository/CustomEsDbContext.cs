@@ -25,10 +25,6 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CustomStream>()
-                        .HasMany(c => c.Events)
-                        .WithOne(e => e.Stream);
-
             base.OnModelCreating(modelBuilder);
         }
 

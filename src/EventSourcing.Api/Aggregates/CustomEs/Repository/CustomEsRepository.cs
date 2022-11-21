@@ -19,7 +19,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
 
         public async Task Update(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default)
         {
-            var stream = await  _dbContext.Streams.FindAsync(id);
+            var stream = await _dbContext.Streams.FindAsync(id);
 
             if (stream == null)
                 throw new NullReferenceException();
