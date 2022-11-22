@@ -11,10 +11,10 @@ namespace EventSourcing.Tests.CustomEs
     {
         private readonly ICustomEsRepository<Account> _repository;
 
-        public CustomEvInMemoryTest(InMemoryDbContextFixture inmemoryDbContext) : 
-            base(inmemoryDbContext)
+        public CustomEvInMemoryTest(InMemoryDbContextFixture dbContext) : 
+            base(dbContext)
         {
-            _repository = new CustomEsRepository<Account>(inmemoryDbContext.MemoryDbContext, new JsonEventSerializer());
+            _repository = new CustomEsRepository<Account>(dbContext.MemoryDbContext, new JsonEventSerializer());
         }
 
         [Fact]
