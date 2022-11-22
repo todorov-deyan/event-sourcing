@@ -2,18 +2,19 @@
 using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
+using EventSourcing.Tests.DBContexts;
 using Xunit;
 
 namespace EventSourcing.Tests.CustomEs
 {
-    public class CustomEvTests : BaseTest
+    public class CustomEvInMemoryTest : InMemoryDbContextBase
     {
         private readonly ICustomEsRepository<Account> _repository;
 
-        public CustomEvTests(InMemoryDbContextFixture inmemoryDbContext) : 
-            base(inmemoryDbContext)
+        public CustomEvInMemoryTest(InMemoryDbContextFixture dbContext) : 
+            base(dbContext)
         {
-            _repository = new CustomEsRepository<Account>(inmemoryDbContext.MemoryDbContext, new JsonEventSerializer());
+            _repository = new CustomEsRepository<Account>(dbContext.MemoryDbContext, new JsonEventSerializer());
         }
 
         [Fact]

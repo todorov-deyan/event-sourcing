@@ -1,7 +1,7 @@
 ﻿using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventSourcing.Tests
+namespace EventSourcing.Tests.DBContexts
 {
     public class InMemoryDbContextFixture
     {

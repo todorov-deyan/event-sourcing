@@ -1,7 +1,7 @@
 ﻿
 namespace EventSourcing.Tests.MartenDb
 {
-    public class MartenDbTests
+    public class MartenDbInMemoryTest
     {
     }
 }
