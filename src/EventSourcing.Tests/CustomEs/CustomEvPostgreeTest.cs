@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using EventSourcing.Api.Aggregates.CustomEs.Repository;
+﻿using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
-using Marten;
+using Shouldly;
+using System.Reflection;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
+    [Order(2)]
     public class CustomEvPostgreeTest : PostgreeDBContextBase
     {
         private readonly ICustomEsRepository<Account> _repository;
@@ -26,10 +22,15 @@ namespace EventSourcing.Tests.CustomEs
             _serializer.ScanEvents(Assembly.LoadFrom("EventSourcing.Api.dll"));
 
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
+            SeedDatabase();
         }
 
-        [Fact]
+        [Fact, Order(1)]
+        public void Init()
+        {
+        }
 
+        [Fact, Order(2)]
         public void CreateAccount()
         {
             var account = new Account();
@@ -47,7 +48,7 @@ namespace EventSourcing.Tests.CustomEs
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact, Order(3)]
         public void ActivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -63,8 +64,8 @@ namespace EventSourcing.Tests.CustomEs
 
             Assert.NotNull(result);
         }
-
-
+        
+        [Fact, Order(4)]
         public void DeactivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -82,29 +83,35 @@ namespace EventSourcing.Tests.CustomEs
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact, Order(5)]
         public void GetAccount_ById()
         {
-            Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-            var result = _repository.Find(streamId);
-
-            Assert.NotNull(result);
+            var result = _repository.Find(SeededStreamId);
+            
+            result.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact, Order(6)]
+        public void GetAccount_ById_Should_Throw_Exeption()
+        {
+            var someGuid = Guid.NewGuid();
+            var result = _repository.Find(someGuid);
+            
+            result.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact, Order(7)]
         public void GetAccount_ById_Reflection()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
             var result = _repository.FindReflection(streamId);
 
             Assert.NotNull(result);
-        }
-        
+        }        
 
-        [Fact]
+        [Fact, Order(8)]
         public void GetAccountAll_ById_Reflection()
-        {
-           
+        {           
         }
     }
 }
