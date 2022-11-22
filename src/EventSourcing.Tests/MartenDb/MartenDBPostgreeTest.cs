@@ -10,9 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Extensions.Ordering;
+
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+[assembly: TestCaseOrderer("Xunit.Extensions.Ordering.TestCaseOrderer", "Xunit.Extensions.Ordering")]
+//Optional
+//[assembly: TestCollectionOrderer("Xunit.Extensions.Ordering.CollectionOrderer", "Xunit.Extensions.Ordering")]
 
 namespace EventSourcing.Tests.MartenDb
 {
+    [Order(1)]
     public class MartenDBPostgreeTest : IClassFixture<MartenDBFixture>
     {
 
@@ -23,8 +30,13 @@ namespace EventSourcing.Tests.MartenDb
             _repository = new MartenRepository<Account>(dbcontext.MartenDBContext.LightweightSession());
         }
 
+        [Fact, Order(1)]
+        public void Init()
+        {
+        }
 
-        [Fact]
+
+        [Fact, Order(2)]
 
         public void CreateAccount()
         {
@@ -43,12 +55,12 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact, Order(3)]
         public void ReturnBadRequest_CreationAccount()
         {
         }
 
-        [Fact]
+        [Fact, Order(4)]
         public void ActivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -65,7 +77,7 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
-
+        [Fact, Order(5)]
         public void DeactivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -83,7 +95,7 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact, Order(6)]
         public void GetAccount_ById()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -92,8 +104,8 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
-      
-        [Fact]
+
+        [Fact, Order(7)]
         public void GetAccountAll_ById_Reflection()
         {
 
