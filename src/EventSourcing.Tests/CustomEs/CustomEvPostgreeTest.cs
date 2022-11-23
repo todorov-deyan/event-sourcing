@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using EventSourcing.Api.Aggregates.CustomEs.Repository;
+﻿using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
-using Marten;
+using Shouldly;
+using System.Reflection;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
+    [Order(2)]
     public class CustomEvPostgreeTest : PostgreeDBContextBase
     {
         private readonly ICustomEsRepository<Account> _repository;
@@ -26,9 +22,13 @@ namespace EventSourcing.Tests.CustomEs
             _serializer.ScanEvents(Assembly.LoadFrom("EventSourcing.Api.dll"));
 
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
+            SeedDatabase();
         }
 
-        [Fact]
+        [Fact, Order(1)]
+        public void Init()
+        {
+        }
 
         public async void CreateAccount()
         {
