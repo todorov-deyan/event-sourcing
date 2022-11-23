@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
+
 using EventSourcing.Api.Aggregates.CustomEs.Repository;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
-using Marten;
+
 using Xunit;
 
 namespace EventSourcing.Tests.CustomEs
