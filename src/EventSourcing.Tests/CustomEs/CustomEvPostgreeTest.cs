@@ -7,9 +7,11 @@ using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
 
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
+    [Order(1)]
     public class CustomEvPostgreeTest : PostgreeDBContextBase
     {
         private readonly ICustomEsRepository<Account> _repository;
@@ -23,7 +25,13 @@ namespace EventSourcing.Tests.CustomEs
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
         }
 
-        [Fact]
+        [Fact, Order(1)]
+        public void Init()
+        {
+            // dummy test to take all load
+        }
+
+        [Fact, Order(2)]
 
         public void CreateAccount()
         {
@@ -42,7 +50,7 @@ namespace EventSourcing.Tests.CustomEs
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact, Order(3)]
         public void ActivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -59,7 +67,7 @@ namespace EventSourcing.Tests.CustomEs
             Assert.NotNull(result);
         }
 
-
+        [Fact, Order(4)]
         public void DeactivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
@@ -77,29 +85,13 @@ namespace EventSourcing.Tests.CustomEs
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact, Order(5)]
         public void GetAccount_ById()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
             var result = _repository.Find(streamId);
 
             Assert.NotNull(result);
-        }
-
-        [Fact]
-        public void GetAccount_ById_Reflection()
-        {
-            Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-            var result = _repository.FindReflection(streamId);
-
-            Assert.NotNull(result);
-        }
-        
-
-        [Fact]
-        public void GetAccountAll_ById_Reflection()
-        {
-           
         }
     }
 }
