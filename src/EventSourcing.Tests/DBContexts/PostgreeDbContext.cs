@@ -9,7 +9,7 @@ namespace EventSourcing.Tests.DBContexts
 {
     public class PostgreeDbContext : IClassFixture<PostgreeDBContextFixture>
     {
-        public Guid specialStreamId = Guid.NewGuid();
+        protected Guid StreamId = Guid.NewGuid();
 
         protected readonly PostgreeDBContextFixture _postgreeDbContext;
         
@@ -37,7 +37,7 @@ namespace EventSourcing.Tests.DBContexts
                     Guid newStreamId = Guid.NewGuid();
                     if(stream == 2 && _event == 2)
                     {
-                        newStreamId = specialStreamId;
+                        newStreamId = StreamId;
                     }
 
                     _postgreeDbContext.PostgreeDbContext.AddRange(

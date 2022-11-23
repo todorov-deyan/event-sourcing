@@ -2,6 +2,7 @@
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
+using EventSourcing.Tests.CustomEs;
 using EventSourcing.Tests.DBContexts;
 
 using Marten.Events.Projections;
@@ -11,6 +12,7 @@ using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.MartenDb
 {
+    [Collection(nameof(MartenDBPostgreeTest))]
     public class MartenDBPostgreeTest : IClassFixture<MartenDbContext>
     {
         private readonly IMartenRepository<Account> _repository;

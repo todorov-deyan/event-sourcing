@@ -11,6 +11,7 @@ using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
+    [Collection(nameof(CustomEvPostgreeTest))]
     public class CustomEvPostgreeTest : PostgreeDbContext
     {
         private readonly ICustomEsRepository<Account> _repository;
@@ -43,7 +44,7 @@ namespace EventSourcing.Tests.CustomEs
             };
 
             await _repository.Add(account, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = _repository.Find(account.Id).ConfigureAwait(false);
+            var result = await _repository.Find(account.Id).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
@@ -51,16 +52,14 @@ namespace EventSourcing.Tests.CustomEs
         [Fact, Order(3)]
         public async Task ActivateAccount()
         {
-            Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-
             var createEvent = new AccountActivated
             {
                 Balance = 1000,
                 Description = "Saved money. Activated"
             };
 
-            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = _repository.Find(streamId).ConfigureAwait(false);
+            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = _repository.Find(StreamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
@@ -68,8 +67,7 @@ namespace EventSourcing.Tests.CustomEs
         [Fact, Order(4)]
         public async Task GetAccount_ById()
         {
-            Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-            var result = await _repository.Find(streamId).ConfigureAwait(false);
+            var result = await _repository.Find(StreamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
@@ -77,24 +75,20 @@ namespace EventSourcing.Tests.CustomEs
         [Fact, Order(5)]
         public async Task TryToActivateNonExistingAccount_ById()
         {
-            Guid streamId = Guid.NewGuid();
-
             var createEvent = new AccountActivated
             {
                 Balance = 1000,
                 Description = "Saved money. Activated"
             };
 
-            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(StreamId).ConfigureAwait(false));
         }
 
         [Fact, Order(6)]
         public async Task TryToDeactivateNonExistingAccount_ById()
         {
-            Guid streamId = Guid.NewGuid();
-
             var createEvent = new AccountCreated
             {
                 Owner = "CreateTestAccount",
@@ -102,24 +96,20 @@ namespace EventSourcing.Tests.CustomEs
                 Description = "Saved money. Deactivated"
             };
 
-            await _repository.Update(streamId, new List<IEventState> { createEvent }, default);
+            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(StreamId).ConfigureAwait(false));
         }
 
         [Fact, Order(7)]
         public async Task TryToGetNonExistingAccount_ById()
         {
-            Guid streamId = Guid.NewGuid();
-
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(StreamId).ConfigureAwait(false));
         }
 
         [Fact, Order(8)]
         public async Task DeactivateAccount()
         {
-            Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-
             var createEvent = new AccountCreated
             {
                 Owner = "CreateTestAccount",
@@ -127,8 +117,8 @@ namespace EventSourcing.Tests.CustomEs
                 Description = "Saved money. Deactivated"
             };
 
-            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = await _repository.Find(streamId).ConfigureAwait(false);
+            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = await _repository.Find(StreamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
