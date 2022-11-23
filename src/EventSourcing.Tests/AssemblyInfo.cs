@@ -5,7 +5,7 @@
 
 namespace EventSourcing.Tests
 {
-    public class AssemblySettings
+    public class AssemblyInfo
     {
     }
 }
