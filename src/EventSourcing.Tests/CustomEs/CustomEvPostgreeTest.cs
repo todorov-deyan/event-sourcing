@@ -15,7 +15,7 @@ using Xunit;
 
 namespace EventSourcing.Tests.CustomEs
 {
-    public class CustomEvPostgreeTest : PostgreeDBContextBase
+    public class CustomEvPostgreeTest : PostgreeDbContext
     {
         private readonly ICustomEsRepository<Account> _repository;
         private readonly JsonEventSerializer _serializer;

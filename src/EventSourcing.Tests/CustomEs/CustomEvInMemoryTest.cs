@@ -9,7 +9,7 @@ using Xunit;
 
 namespace EventSourcing.Tests.CustomEs
 {
-    public class CustomEvInMemoryTest : InMemoryDbContextBase
+    public class CustomEvInMemoryTest : InMemoryDbContext
     {
         private readonly ICustomEsRepository<Account> _repository;
         private readonly JsonEventSerializer _serializer;

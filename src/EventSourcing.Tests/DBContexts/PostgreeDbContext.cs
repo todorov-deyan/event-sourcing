@@ -13,11 +13,11 @@ using Marten;
 
 namespace EventSourcing.Tests.DBContexts
 {
-    public class PostgreeDBContextBase : IClassFixture<PostgreeDBContextFixture>
+    public class PostgreeDbContext : IClassFixture<PostgreeDBContextFixture>
     {
         protected readonly PostgreeDBContextFixture _postgreeDbContext;
         
-        public PostgreeDBContextBase(PostgreeDBContextFixture dbContext)
+        public PostgreeDbContext(PostgreeDBContextFixture dbContext)
         {
             this._postgreeDbContext = dbContext;
 
