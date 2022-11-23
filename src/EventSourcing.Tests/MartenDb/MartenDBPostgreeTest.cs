@@ -2,7 +2,6 @@
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
-using EventSourcing.Tests.CustomEs;
 using EventSourcing.Tests.DBContexts;
 
 using Marten.Events.Projections;
@@ -30,8 +29,13 @@ namespace EventSourcing.Tests.MartenDb
         }
 
 
-        [Fact, Order(2)]
-        public async Task CreateAccount()
+        [Theory, Order(2)]
+        [InlineData("CreateTestAccount 1", 1010, "Saved money 1")]
+        [InlineData("CreateTestAccount 2", 1020, "Saved money 2")]
+        [InlineData("CreateTestAccount 3", 1030, "Saved money 3")]
+        [InlineData("CreateTestAccount 4", 1040, "Saved money 4")]
+        [InlineData("CreateTestAccount 5", 1050, "Saved money 5")]
+        public async Task CreateAccount(string owner, decimal balance, string description)
         {
             var account = new Account
             {
@@ -42,9 +46,9 @@ namespace EventSourcing.Tests.MartenDb
 
             var createEvent = new AccountCreated
             {
-                Owner = "CreateTest",
-                Balance = 1000,
-                Description = "Saved money"
+                Owner = owner,
+                Balance = balance,
+                Description = description
             };
 
             await _repository.Add(account, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
