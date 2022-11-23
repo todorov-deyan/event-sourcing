@@ -15,7 +15,7 @@ namespace EventSourcing.Tests.MartenDb
     public class MartenDBPostgreeTest : IClassFixture<MartenDbContext>
     {
         private readonly IMartenRepository<Account> _repository;
-
+       
         public MartenDBPostgreeTest(MartenDbContext dbcontext)
         {
             dbcontext.UseSelfAggregate<Account>(ProjectionLifecycle.Inline);
@@ -54,7 +54,7 @@ namespace EventSourcing.Tests.MartenDb
             await _repository.Add(account, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
             var result = await _repository.Find(account.Id, CancellationToken.None).ConfigureAwait(false);
 
-            Assert.NotNull(result);
+            Assert.NotNull(result);           
         }
 
         [Fact, Order(3)]
@@ -78,27 +78,45 @@ namespace EventSourcing.Tests.MartenDb
         public async Task GetAccount_ById()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
+
             var result = await _repository.Find(streamId, CancellationToken.None).ConfigureAwait(false);
 
-            Assert.NotNull(result);
+            Assert.NotNull(result.Id);
         }
 
         [Fact, Order(5)]
         public async Task TryToActivateNonExistingAccount_ById()
         {
-            //TODO:
+            Guid streamId = Guid.NewGuid();
+
+            var createEvent = new AccountActivated
+            {
+                Balance = 1000,
+                Description = "Saved money. Activated"
+            };
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId, CancellationToken.None).ConfigureAwait(false));
         }
 
         [Fact, Order(6)]
         public async Task TryToDeactivateNonExistingAccount_ById()
         {
-            //TODO:
+            Guid streamId = Guid.NewGuid();
+
+            var createEvent = new AccountDeactivated
+            {
+                Description = "Closed. Deactivated"
+            };
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId, CancellationToken.None).ConfigureAwait(false));
         }
 
         [Fact, Order(7)]
         public async Task TryToGetNonExistingAccount_ById()
         {
-            //TODO:
+            Guid streamId = Guid.NewGuid();
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId, CancellationToken.None).ConfigureAwait(false));
         }
 
         [Fact, Order(8)]
