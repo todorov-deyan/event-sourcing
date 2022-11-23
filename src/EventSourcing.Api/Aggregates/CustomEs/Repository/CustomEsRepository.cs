@@ -126,5 +126,31 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
 
             return aggregate;
         }
+
+        public Task<List<T>> FindAllReflection()
+        {
+            var streams = _dbContext.Streams.Include(x => x.Events).ToList();
+
+            if(streams is null)
+                throw new ArgumentException(nameof(CustomStream));
+
+            var aggregates = new List<T>();
+
+            foreach (var stream in streams)
+            {
+                T aggregate = new T();
+                aggregate.Id = stream.StreamId;
+
+                foreach (var @event in stream.Events)
+                {
+                    IEventState @eventState = _serializer.DeserializeEvent(@event.EventType, @event.Data);
+                    if (@eventState != null)
+                        aggregate.When(@eventState);
+
+                    aggregates.Add(aggregate);
+                }
+            }
+            return Task.FromResult(aggregates);
+        }
     }
 }

@@ -61,11 +61,6 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
-        [Fact, Order(3)]
-        public void ReturnBadRequest_CreationAccount()
-        {
-        }
-
         [Fact, Order(4)]
         public async void ActivateAccount()
         {
@@ -83,15 +78,20 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public void TryToActivateNonExistingAccount_ById()
+        {
+            //TODO:
+        }
+
         [Fact, Order(5)]
         public async void DeactivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
 
-            var createEvent = new AccountCreated
+            var createEvent = new AccountDeactivated
             {
-                Owner = "CreateTestAccount",
-                Balance = 1000,
+                ClosingBalance = 0,
                 Description = "Saved money. Deactivated"
             };
 
@@ -99,6 +99,11 @@ namespace EventSourcing.Tests.MartenDb
             var result = await _repository.Find(streamId, CancellationToken.None);
 
             Assert.NotNull(result);
+        }
+
+        public void TryToDeactivateNonExistingAccount_ById()
+        {
+            //TODO:
         }
 
         [Fact, Order(6)]
@@ -110,6 +115,10 @@ namespace EventSourcing.Tests.MartenDb
             Assert.NotNull(result);
         }
 
+        public void TryToGetNonExistingAccount_ById()
+        {
+            //TODO:
+        }
 
     }
 }
