@@ -25,6 +25,11 @@ namespace EventSourcing.Api.Aggregates.MartenDb.Repository
             return _documentSession.Events.AggregateStreamAsync<T>(id, token: cancellationToken);
         }
 
+        public Task<List<T?>> FindAll(Guid id, CancellationToken cancellationToken = default)
+        {
+            return _documentSession.Events.AggregateStreamAsync<List<T>>(id, token: cancellationToken);
+        }
+
         public Task Update(Guid id, IList<IEventState> events, CancellationToken cancellationToken = default)
         {
             _documentSession.Events.Append(id, events);
