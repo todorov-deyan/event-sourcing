@@ -1,22 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EventSourcing.Api.Aggregates.CustomEs.Repository.Entities;
+﻿using EventSourcing.Api.Aggregates.CustomEs.Repository.Entities;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
-using EventSourcing.Api.Aggregates.Model;
-using EventSourcing.Api.Common.EventSourcing;
-using Xunit;
-using Marten;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace EventSourcing.Tests.DBContexts
 {
     public class PostgreeDBContextBase : IClassFixture<PostgreeDBContextFixture>
     {
-        public Guid SeededStreamId = Guid.NewGuid();
+        public Guid specialStreamId = Guid.NewGuid();
 
         protected readonly PostgreeDBContextFixture _postgreeDbContext;
 
@@ -30,33 +21,45 @@ namespace EventSourcing.Tests.DBContexts
 
         public void SeedDatabase()
         {
-            var createEvent = new AccountCreated
+            foreach (int stream in Enumerable.Range(1, 10))
             {
-                Owner = "Miro",
-                Balance = 555,
-                Description = "Deposit"
-            };
-
-            _postgreeDbContext.PostgreeDbContext.AddRange(
-                new CustomStream
+                var createEvent = new AccountCreated
                 {
-                    StreamId = SeededStreamId,
-                    CreatedAt = DateTime.UtcNow,
-                    Type = "account",
-                    Events = new List<CustomEvent>()
-                    {
-                        new CustomEvent()
-                        {
-                            EventId = Guid.NewGuid(),
-                            StreamId = SeededStreamId,
-                            EventType = "accountcreated",
-                            CreatedAt = DateTime.UtcNow,
-                            Data = JsonConvert.SerializeObject(createEvent)
-                        }
-                    }
-                });
+                    Owner = "Miro",
+                    Balance = 5 * stream,
+                    Description = "Deposit"
+                };
 
-            _postgreeDbContext.PostgreeDbContext.SaveChanges();
+                foreach (int _event in Enumerable.Range(1, 10))
+                {
+                    Guid newStreamId = Guid.NewGuid();
+                    if(stream == 2 && _event == 2)
+                    {
+                        newStreamId = specialStreamId;
+                    }
+
+                    _postgreeDbContext.PostgreeDbContext.AddRange(
+                        new CustomStream
+                        {
+                            StreamId = newStreamId,
+                            CreatedAt = DateTime.UtcNow,
+                            Type = "account",
+                            Events = new List<CustomEvent>()
+                            {
+                                        new CustomEvent()
+                                        {
+                                            EventId = Guid.NewGuid(),
+                                            StreamId = newStreamId,
+                                            EventType = "accountcreated",
+                                            CreatedAt = DateTime.UtcNow,
+                                            Data = JsonConvert.SerializeObject(createEvent)
+                                        }
+                            }
+                        });
+
+                    _postgreeDbContext.PostgreeDbContext.SaveChanges();
+                }
+            }
         }
     }
 }

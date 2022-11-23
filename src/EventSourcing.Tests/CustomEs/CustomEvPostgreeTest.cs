@@ -86,7 +86,7 @@ namespace EventSourcing.Tests.CustomEs
         [Fact, Order(5)]
         public void GetAccount_ById()
         {
-            var result = _repository.Find(SeededStreamId);
+            var result = _repository.Find(specialStreamId);
             
             result.ShouldNotBeNull();
         }
