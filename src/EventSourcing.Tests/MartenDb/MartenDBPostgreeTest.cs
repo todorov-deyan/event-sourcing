@@ -2,7 +2,6 @@
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
-using EventSourcing.Tests.CustomEs;
 using EventSourcing.Tests.DBContexts;
 
 using Marten.Events.Projections;
