@@ -7,11 +7,6 @@ using EventSourcing.Tests.DBContexts;
 using Xunit;
 using Xunit.Extensions.Ordering;
 
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
-[assembly: TestCaseOrderer("Xunit.Extensions.Ordering.TestCaseOrderer", "Xunit.Extensions.Ordering")]
-//Optional
-//[assembly: TestCollectionOrderer("Xunit.Extensions.Ordering.CollectionOrderer", "Xunit.Extensions.Ordering")]
-
 namespace EventSourcing.Tests.MartenDb
 {
     [Order(1)]
