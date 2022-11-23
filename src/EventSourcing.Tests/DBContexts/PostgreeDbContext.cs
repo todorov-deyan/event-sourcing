@@ -1,6 +1,8 @@
 ﻿using EventSourcing.Api.Aggregates.CustomEs.Repository.Entities;
 using EventSourcing.Api.Aggregates.MartenDb.Events;
+
 using Newtonsoft.Json;
+
 using Xunit;
 
 namespace EventSourcing.Tests.DBContexts
