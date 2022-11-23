@@ -9,25 +9,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Marten;
+using Marten.Events.Projections;
 using Xunit;
 using Xunit.Extensions.Ordering;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 [assembly: TestCaseOrderer("Xunit.Extensions.Ordering.TestCaseOrderer", "Xunit.Extensions.Ordering")]
-//Optional
 //[assembly: TestCollectionOrderer("Xunit.Extensions.Ordering.CollectionOrderer", "Xunit.Extensions.Ordering")]
 
 namespace EventSourcing.Tests.MartenDb
 {
     [Order(1)]
-    public class MartenDBPostgreeTest : IClassFixture<MartenDBFixture>
+    public class MartenDBPostgreeTest : IClassFixture<MartenDbContext>
     {
-
         private readonly IMartenRepository<Account> _repository;
 
-        public MartenDBPostgreeTest(MartenDBFixture dbcontext)
+        public MartenDBPostgreeTest(MartenDbContext dbcontext)
         {
-            _repository = new MartenRepository<Account>(dbcontext.MartenDBContext.LightweightSession());
+            dbcontext.UseSelfAggregate<Account>(ProjectionLifecycle.Inline);
+
+            _repository = new MartenRepository<Account>(dbcontext.Session);
         }
 
         [Fact, Order(1)]
@@ -37,10 +39,14 @@ namespace EventSourcing.Tests.MartenDb
 
 
         [Fact, Order(2)]
-
-        public void CreateAccount()
+        public async void CreateAccount()
         {
-            var account = new Account();
+            var account = new Account
+            {
+                Id = Guid.NewGuid(),
+                Owner = "TestCreate",
+                Balance = 10000
+            };
 
             var createEvent = new AccountCreated
             {
@@ -49,8 +55,8 @@ namespace EventSourcing.Tests.MartenDb
                 Description = "Saved money"
             };
 
-            _repository.Add(account, new List<IEventState> { createEvent }, default);
-            var result = _repository.Find(account.Id, CancellationToken.None);
+            await _repository.Add(account, new List<IEventState> { createEvent }, default);
+            var result = await _repository.Find(account.Id, CancellationToken.None);
 
             Assert.NotNull(result);
         }
@@ -61,7 +67,7 @@ namespace EventSourcing.Tests.MartenDb
         }
 
         [Fact, Order(4)]
-        public void ActivateAccount()
+        public async void ActivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
 
@@ -71,14 +77,14 @@ namespace EventSourcing.Tests.MartenDb
                 Description = "Saved money. Activated"
             };
 
-            _repository.Update(streamId, new List<IEventState> { createEvent }, default);
-            var result = _repository.Find(streamId, CancellationToken.None);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default);
+            var result = await _repository.Find(streamId, CancellationToken.None);
 
             Assert.NotNull(result);
         }
 
         [Fact, Order(5)]
-        public void DeactivateAccount()
+        public async void DeactivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
 
@@ -89,26 +95,21 @@ namespace EventSourcing.Tests.MartenDb
                 Description = "Saved money. Deactivated"
             };
 
-            _repository.Update(streamId, new List<IEventState> { createEvent }, default);
-            var result = _repository.Find(streamId, CancellationToken.None);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default);
+            var result = await _repository.Find(streamId, CancellationToken.None);
 
             Assert.NotNull(result);
         }
 
         [Fact, Order(6)]
-        public void GetAccount_ById()
+        public async void GetAccount_ById()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-            var result = _repository.Find(streamId, CancellationToken.None);
+            var result = await _repository.Find(streamId, CancellationToken.None);
 
             Assert.NotNull(result);
         }
 
 
-        [Fact, Order(7)]
-        public void GetAccountAll_ById_Reflection()
-        {
-
-        }
     }
 }

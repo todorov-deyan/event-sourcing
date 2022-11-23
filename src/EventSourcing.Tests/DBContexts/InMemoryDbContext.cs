@@ -2,11 +2,11 @@
 
 namespace EventSourcing.Tests.DBContexts
 {
-    public class InMemoryDbContextBase : IClassFixture<InMemoryDbContextFixture>
+    public class InMemoryDbContext : IClassFixture<InMemoryDbContextFixture>
     {
         protected readonly InMemoryDbContextFixture inmemoryDbContext;
 
-        public InMemoryDbContextBase(InMemoryDbContextFixture inmemoryDbContext)
+        public InMemoryDbContext(InMemoryDbContextFixture inmemoryDbContext)
         {
             this.inmemoryDbContext = inmemoryDbContext;
         }
