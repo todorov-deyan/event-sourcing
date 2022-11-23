@@ -12,7 +12,6 @@ namespace EventSourcing.Tests.MartenDb
     [Order(1)]
     public class MartenDBPostgreeTest : IClassFixture<MartenDBFixture>
     {
-
         private readonly IMartenRepository<Account> _repository;
 
         public MartenDBPostgreeTest(MartenDBFixture dbcontext)
@@ -25,7 +24,6 @@ namespace EventSourcing.Tests.MartenDb
         {
             // dummy test to take all load
         }
-
 
         [Fact, Order(2)]
 
