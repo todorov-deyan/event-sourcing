@@ -1,14 +1,9 @@
-﻿using EventSourcing.Api.Aggregates.CustomEs.Repository;
-using EventSourcing.Api.Aggregates.MartenDb.Events;
+﻿using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.MartenDb.Repository;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Xunit;
 using Xunit.Extensions.Ordering;
 
