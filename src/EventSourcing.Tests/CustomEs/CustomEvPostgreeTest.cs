@@ -33,7 +33,7 @@ namespace EventSourcing.Tests.CustomEs
 
         [Fact, Order(2)]
 
-        public void CreateAccount()
+        public async void CreateAccount()
         {
             var account = new Account();
 
@@ -44,14 +44,14 @@ namespace EventSourcing.Tests.CustomEs
                 Description = "Saved money"
             };
 
-            _repository.Add(account, new List<IEventState> { createEvent }, default);
-            var result = _repository.Find(account.Id);
+            await _repository.Add(account, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = await _repository.Find(account.Id).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
 
         [Fact, Order(3)]
-        public void ActivateAccount()
+        public async void ActivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
 
@@ -61,14 +61,14 @@ namespace EventSourcing.Tests.CustomEs
                 Description = "Saved money. Activated"
             };
 
-            _repository.Update(streamId, new List<IEventState> { createEvent }, default);
-            var result = _repository.Find(streamId);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = await _repository.Find(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
 
         [Fact, Order(4)]
-        public void DeactivateAccount()
+        public async void DeactivateAccount()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
 
@@ -79,17 +79,17 @@ namespace EventSourcing.Tests.CustomEs
                 Description = "Saved money. Deactivated"
             };
 
-            _repository.Update(streamId, new List<IEventState> { createEvent }, default);
-            var result = _repository.Find(streamId);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = await _repository.Find(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
 
         [Fact, Order(5)]
-        public void GetAccount_ById()
+        public async void GetAccount_ById()
         {
             Guid streamId = new Guid("5d0b0dbf-365b-4fe0-85c4-c6a670a934cb");
-            var result = _repository.Find(streamId);
+            var result = await _repository.Find(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }

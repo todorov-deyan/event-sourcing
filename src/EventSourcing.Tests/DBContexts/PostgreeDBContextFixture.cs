@@ -1,5 +1,5 @@
-﻿
-using EventSourcing.Api.Aggregates.CustomEs.Repository;
+﻿using EventSourcing.Api.Aggregates.CustomEs.Repository;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventSourcing.Tests.DBContexts
