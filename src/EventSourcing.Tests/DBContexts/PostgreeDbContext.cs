@@ -5,13 +5,13 @@ using Xunit;
 
 namespace EventSourcing.Tests.DBContexts
 {
-    public class PostgreeDBContextBase : IClassFixture<PostgreeDBContextFixture>
+    public class PostgreeDbContext : IClassFixture<PostgreeDBContextFixture>
     {
         public Guid specialStreamId = Guid.NewGuid();
 
         protected readonly PostgreeDBContextFixture _postgreeDbContext;
-
-        public PostgreeDBContextBase(PostgreeDBContextFixture dbContext)
+        
+        public PostgreeDbContext(PostgreeDBContextFixture dbContext)
         {
             _postgreeDbContext = dbContext;
 
