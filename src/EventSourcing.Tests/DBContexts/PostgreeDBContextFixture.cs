@@ -14,6 +14,9 @@ namespace EventSourcing.Tests.DBContexts
                 new DbContextOptionsBuilder<CustomEsDbContext>()
                     .UseNpgsql(Constants.ConnectionString, options => options.UseAdminDatabase("postgres"))
                     .Options);
+
+            PostgreeDbContext.Database.EnsureDeleted();
+            PostgreeDbContext.Database.EnsureCreated();
         }
     }
 }
