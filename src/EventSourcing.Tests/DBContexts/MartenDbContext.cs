@@ -14,12 +14,9 @@ namespace EventSourcing.Tests.DBContexts
         {
             get
             {
-                //if (_session == null)
-                {
-                    _session = base.DocStore.OpenSession(DocumentTracking);
-                    Disposables.Add(_session);
-                }
-
+                _session = base.DocStore.OpenSession(DocumentTracking);
+                Disposables.Add(_session);
+                
                 return _session;
             }
         }

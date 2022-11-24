@@ -9,7 +9,7 @@ namespace EventSourcing.Tests.DBContexts
 {
     public class PostgreeDbContext : IClassFixture<PostgreeDBContextFixture>
     {
-        protected Guid StreamId = Guid.NewGuid();
+        private Guid StreamId = Guid.NewGuid();
 
         protected readonly PostgreeDBContextFixture _postgreeDbContext;
         
