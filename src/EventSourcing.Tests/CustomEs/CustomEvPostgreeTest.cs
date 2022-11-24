@@ -5,7 +5,7 @@ using EventSourcing.Api.Aggregates.MartenDb.Events;
 using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
-
+using EventSourcing.Tests.TestData;
 using Xunit;
 using Xunit.Extensions.Ordering;
 
@@ -23,7 +23,7 @@ namespace EventSourcing.Tests.CustomEs
             _serializer.ScanEvents(Assembly.LoadFrom("EventSourcing.Api.dll"));
 
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
-            SeedDatabase();
+            //SeedDatabase();
         }
 
         [Fact, Order(1)]
@@ -32,14 +32,11 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(2)]
-        [InlineData("CreateTestAccount 1", 1010, "Saved money 1")]
-        [InlineData("CreateTestAccount 2", 1020, "Saved money 2")]
-        [InlineData("CreateTestAccount 3", 1030, "Saved money 3")]
-        [InlineData("CreateTestAccount 4", 1040, "Saved money 4")]
-        [InlineData("CreateTestAccount 5", 1050, "Saved money 5")]
-        public async Task CreateAccount(string owner, decimal balance, string description)
+        [ClassData(typeof(GenTestData))]
+        public async Task CreateAccount(Guid streamId, string owner, decimal balance, string description)
         {
             var account = new Account();
+            account.Id = streamId;
 
             var createEvent = new AccountCreated
             {
@@ -54,76 +51,80 @@ namespace EventSourcing.Tests.CustomEs
             Assert.NotNull(result);
         }
 
-        [Fact, Order(3)]
-        public async Task ActivateAccount()
+        [Theory, Order(3)]
+        [ClassData(typeof(GenTestData))]
+        public async Task ActivateAccount(Guid streamId, string owner, decimal balance, string description)
         {
             var createEvent = new AccountActivated
             {
                 Balance = 1000,
-                Description = "Saved money. Activated"
+                Description = description
             };
 
-            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = _repository.Find(StreamId).ConfigureAwait(false);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = _repository.Find(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
 
-        [Fact, Order(4)]
-        public async Task GetAccount_ById()
+        [Theory, Order(4)]
+        [ClassData(typeof(GenTestData))]
+        public async Task GetAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
-            var result = await _repository.Find(StreamId).ConfigureAwait(false);
+            var result = await _repository.Find(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
 
-        [Fact, Order(5)]
-        public async Task TryToActivateNonExistingAccount_ById()
+        [Theory, Order(5)]
+        [ClassData(typeof(GenTestData))]
+        public async Task TryToActivateNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
             var createEvent = new AccountActivated
             {
-                Balance = 1000,
-                Description = "Saved money. Activated"
+                Balance = balance,
+                Description = description
             };
 
-            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(StreamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
         }
 
-        [Fact, Order(6)]
-        public async Task TryToDeactivateNonExistingAccount_ById()
+        [Theory, Order(6)]
+        [ClassData(typeof(GenTestData))]
+        public async Task TryToDeactivateNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
-            var createEvent = new AccountCreated
+            var createEvent = new AccountDeactivated
             {
-                Owner = "CreateTestAccount",
-                Balance = 1000,
-                Description = "Saved money. Deactivated"
+                ClosingBalance = balance,
+                Description = description
             };
 
-            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(StreamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
         }
 
-        [Fact, Order(7)]
-        public async Task TryToGetNonExistingAccount_ById()
+        [Theory, Order(7)]
+        [ClassData(typeof(GenTestData))]
+        public async Task TryToGetNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(StreamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
         }
 
-        [Fact, Order(8)]
-        public async Task DeactivateAccount()
+        [Theory, Order(8)]
+        [ClassData(typeof(GenTestData))]
+        public async Task DeactivateAccount(Guid streamId, string owner, decimal balance, string description)
         {
-            var createEvent = new AccountCreated
+            var createEvent = new AccountDeactivated
             {
-                Owner = "CreateTestAccount",
-                Balance = 1000,
-                Description = "Saved money. Deactivated"
+                ClosingBalance = balance,
+                Description = description
             };
 
-            await _repository.Update(StreamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = await _repository.Find(StreamId).ConfigureAwait(false);
+            await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
+            var result = await _repository.Find(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
