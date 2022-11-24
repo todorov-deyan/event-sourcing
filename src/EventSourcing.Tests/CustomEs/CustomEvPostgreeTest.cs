@@ -23,7 +23,6 @@ namespace EventSourcing.Tests.CustomEs
             _serializer.ScanEvents(Assembly.LoadFrom("EventSourcing.Api.dll"));
 
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
-            //SeedDatabase();
         }
 
         [Fact, Order(1)]
