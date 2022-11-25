@@ -11,12 +11,11 @@ using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.MartenDb
 {
-    [Collection(nameof(MartenDBPostgreeTest))]
-    public class MartenDBPostgreeTest : IClassFixture<MartenDbContext>
+    public class MartenDBPostgreeTest : IClassFixture<MartenDbFixture>
     {
         private readonly IMartenRepository<Account> _repository;
        
-        public MartenDBPostgreeTest(MartenDbContext dbcontext)
+        public MartenDBPostgreeTest(MartenDbFixture dbcontext)
         {
             dbcontext.UseSelfAggregate<Account>(ProjectionLifecycle.Inline);
 

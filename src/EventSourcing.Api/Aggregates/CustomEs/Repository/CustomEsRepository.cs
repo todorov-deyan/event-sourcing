@@ -107,7 +107,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
             return aggregate;
         }
 
-        public async Task<T?> FindReflection(Guid id, CancellationToken cancellationToken)
+        public async Task<T?> FindByReflection(Guid id, CancellationToken cancellationToken)
         {
             var stream =  _dbContext.Streams.Include(x => x.Events).FirstOrDefault(x => x.StreamId == id);
              

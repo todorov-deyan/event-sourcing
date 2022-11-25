@@ -8,7 +8,7 @@ namespace EventSourcing.Api.Aggregates.CustomEs.Repository
 
         Task Add(T aggregate, IList<IEventState> events, CancellationToken cancellationToken = default);
         Task<T?> Find(Guid id, CancellationToken cancellationToken = default);
-        Task<T?> FindReflection(Guid id, CancellationToken cancellationToken = default);
+        Task<T?> FindByReflection(Guid id, CancellationToken cancellationToken = default);
         Task<List<T>?> FindAllReflection();
     }
 }
