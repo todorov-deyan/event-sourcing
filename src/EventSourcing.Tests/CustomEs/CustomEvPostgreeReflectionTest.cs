@@ -30,7 +30,7 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(2)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task CreateAccount(Guid streamId, string owner, decimal balance, string description)
         {
             var account = new Account();
@@ -50,7 +50,7 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(3)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task ActivateAccount(Guid streamId, string owner, decimal balance, string description)
         {
             var createEvent = new AccountActivated
@@ -66,7 +66,7 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(4)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task GetAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
             var result = await _repository.Find(streamId).ConfigureAwait(false);
@@ -75,7 +75,7 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(5)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task TryToActivateNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
             var createEvent = new AccountActivated
@@ -90,7 +90,7 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(6)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task TryToDeactivateNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
             var createEvent = new AccountDeactivated
@@ -105,14 +105,14 @@ namespace EventSourcing.Tests.CustomEs
         }
 
         [Theory, Order(7)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task TryToGetNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.FindByReflection(streamId).ConfigureAwait(false));
         }
 
         [Theory, Order(8)]
-        [ClassData(typeof(GenTestData))]
+        [ClassData(typeof(TheoryTestData))]
         public async Task DeactivateAccount(Guid streamId, string owner, decimal balance, string description)
         {
             var createEvent = new AccountDeactivated
