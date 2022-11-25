@@ -2,7 +2,6 @@
 
 using Marten;
 using Marten.Events.Projections;
-
 using Weasel.Core;
 
 using StoreOptions = Marten.StoreOptions;
@@ -12,10 +11,14 @@ namespace EventSourcing.Tests.DBContexts
     public class MartenDbFixture  : IDisposable
     {
         private const string _schemaName = "martendb_event_sourcing";
-
-        protected StoreOptions Options { get; } = new StoreOptions();
         private DocumentStore _store;
 
+        protected StoreOptions Options { get; } = new StoreOptions();
+
+        protected readonly IList<IDisposable> Disposables = new List<IDisposable>();
+        protected DocumentTracking DocumentTracking { get; set; } = DocumentTracking.None;
+
+        protected IDocumentSession _session;
         protected DocumentStore DocStore
         {
             get
@@ -23,9 +26,21 @@ namespace EventSourcing.Tests.DBContexts
                 if (_store == null)
                 {
                     _store = new DocumentStore(Options);
+                    Disposables.Add(_store);
                 }
 
                 return _store;
+            }
+        }
+
+        public IDocumentSession Session
+        {
+            get
+            {
+                _session = DocStore.OpenSession(DocumentTracking);
+                Disposables.Add(_session);
+
+                return _session;
             }
         }
 
@@ -51,7 +66,10 @@ namespace EventSourcing.Tests.DBContexts
         
         public void Dispose()
         {
-            _store?.Dispose();
+            foreach (var disposable in Disposables)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

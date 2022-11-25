@@ -11,14 +11,16 @@ using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
-    public class CustomEvPostgreeTest : IClassFixture<PostgreeDBContextFixture>
+    public class CustomEvPostgreeReflectionTest : IClassFixture<PostgreeDBContextFixture>
     {
         private readonly ICustomEsRepository<Account> _repository;
         private readonly JsonEventSerializer _serializer;
 
-        public CustomEvPostgreeTest(PostgreeDBContextFixture dbContext) 
+        public CustomEvPostgreeReflectionTest(PostgreeDBContextFixture dbContext)
         {
             _serializer = new JsonEventSerializer();
+            _serializer.ScanEvents(Assembly.LoadFrom("EventSourcing.Api.dll"));
+
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
         }
 
@@ -42,7 +44,7 @@ namespace EventSourcing.Tests.CustomEs
             };
 
             await _repository.Add(account, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = await _repository.Find(account.Id).ConfigureAwait(false);
+            var result = await _repository.FindByReflection(account.Id).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
@@ -58,7 +60,7 @@ namespace EventSourcing.Tests.CustomEs
             };
 
             await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = _repository.Find(streamId).ConfigureAwait(false);
+            var result = _repository.FindByReflection(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
@@ -84,7 +86,7 @@ namespace EventSourcing.Tests.CustomEs
 
             await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.FindByReflection(streamId).ConfigureAwait(false));
         }
 
         [Theory, Order(6)]
@@ -99,14 +101,14 @@ namespace EventSourcing.Tests.CustomEs
 
             await _repository.Update(streamId, new List<IEventState> { createEvent }, default);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.FindByReflection(streamId).ConfigureAwait(false));
         }
 
         [Theory, Order(7)]
         [ClassData(typeof(GenTestData))]
         public async Task TryToGetNonExistingAccount_ById(Guid streamId, string owner, decimal balance, string description)
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.Find(streamId).ConfigureAwait(false));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _repository.FindByReflection(streamId).ConfigureAwait(false));
         }
 
         [Theory, Order(8)]
@@ -120,7 +122,7 @@ namespace EventSourcing.Tests.CustomEs
             };
 
             await _repository.Update(streamId, new List<IEventState> { createEvent }, default).ConfigureAwait(false);
-            var result = await _repository.Find(streamId).ConfigureAwait(false);
+            var result = await _repository.FindByReflection(streamId).ConfigureAwait(false);
 
             Assert.NotNull(result);
         }
