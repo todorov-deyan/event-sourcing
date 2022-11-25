@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace EventSourcing.Tests.TestData
 {
@@ -21,10 +16,8 @@ namespace EventSourcing.Tests.TestData
                 { "0FCAEEFE-01DF-48DC-9404-C194EBB8C5F3", "Account 4", 4000, "Saved money 4" };
             yield return new object[]
                 { "5896B650-FB05-4FC4-925F-3B9CAF795237", "Account 5", 5000, "Saved money 5" };
-
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
     }
 }
