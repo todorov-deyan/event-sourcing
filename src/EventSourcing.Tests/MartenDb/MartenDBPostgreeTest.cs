@@ -27,7 +27,6 @@ namespace EventSourcing.Tests.MartenDb
         {
         }
 
-
         [Theory, Order(2)]
         [ClassData(typeof(TheoryTestData))]
         public async Task CreateAccount(Guid streamId, string owner, decimal balance, string description)

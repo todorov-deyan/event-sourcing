@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventSourcing.Tests.DBContexts
 {
-    public class PostgreeDBContextFixture
+    public class PostgreDBContextFixture : PostgresSql
     {
         public CustomEsDbContext PostgreeDbContext { get; init; }
 
-        public PostgreeDBContextFixture()
+        public PostgreDBContextFixture()
         {
             PostgreeDbContext = new CustomEsDbContext(
                 new DbContextOptionsBuilder<CustomEsDbContext>()
-                    .UseNpgsql(Constants.ConnectionString, options => options.UseAdminDatabase("postgres"))
+                    .UseNpgsql(ConnectionString, options => options.UseAdminDatabase("postgres"))
                     .Options);
 
             PostgreeDbContext.Database.EnsureDeleted();

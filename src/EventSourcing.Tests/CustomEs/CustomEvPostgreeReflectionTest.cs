@@ -6,17 +6,18 @@ using EventSourcing.Api.Aggregates.Model;
 using EventSourcing.Api.Common.EventSourcing;
 using EventSourcing.Tests.DBContexts;
 using EventSourcing.Tests.TestData;
+
 using Xunit;
 using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
-    public class CustomEvPostgreeReflectionTest : IClassFixture<PostgreeDBContextFixture>
+    public class CustomEvPostgreeReflectionTest : IClassFixture<PostgreDBContextFixture>
     {
         private readonly ICustomEsRepository<Account> _repository;
         private readonly JsonEventSerializer _serializer;
 
-        public CustomEvPostgreeReflectionTest(PostgreeDBContextFixture dbContext)
+        public CustomEvPostgreeReflectionTest(PostgreDBContextFixture dbContext)
         {
             _serializer = new JsonEventSerializer();
             _serializer.ScanEvents(Assembly.LoadFrom("EventSourcing.Api.dll"));
