@@ -2,24 +2,26 @@
 
 using Marten;
 using Marten.Events.Projections;
+
 using Weasel.Core;
 
 using StoreOptions = Marten.StoreOptions;
 
 namespace EventSourcing.Tests.DBContexts
 {
-    public class MartenDbFixture  : IDisposable
+    public class MartenDbFixture  : PostgresSql
     {
-        private const string _schemaName = "martendb_event_sourcing";
         private DocumentStore _store;
 
-        protected StoreOptions Options { get; } = new StoreOptions();
+        private StoreOptions Options { get; } = new StoreOptions();
 
-        protected readonly IList<IDisposable> Disposables = new List<IDisposable>();
-        protected DocumentTracking DocumentTracking { get; set; } = DocumentTracking.None;
+        private readonly IList<IDisposable> Disposables = new List<IDisposable>();
 
-        protected IDocumentSession _session;
-        protected DocumentStore DocStore
+        private DocumentTracking DocumentTracking { get; set; } = DocumentTracking.None;
+
+        private IDocumentSession _session;
+
+        protected DocumentStore DocumentStore
         {
             get
             {
@@ -37,7 +39,7 @@ namespace EventSourcing.Tests.DBContexts
         {
             get
             {
-                _session = DocStore.OpenSession(DocumentTracking);
+                _session = DocumentStore.OpenSession(DocumentTracking);
                 Disposables.Add(_session);
 
                 return _session;
@@ -46,12 +48,12 @@ namespace EventSourcing.Tests.DBContexts
 
         public MartenDbFixture()
         {
-            Options.DatabaseSchemaName = _schemaName;
+            Options.DatabaseSchemaName = SchemaName;
             Options.AutoCreateSchemaObjects = AutoCreate.All;
-            Options.Connection(Constants.ConnectionString);
+            Options.Connection(ConnectionString);
             Options.UseDefaultSerialization(EnumStorage.AsString, nonPublicMembersStorage: NonPublicMembersStorage.All);
 
-            DocStore.Advanced.Clean.CompletelyRemoveAll();
+            DocumentStore.Advanced.Clean.CompletelyRemoveAll();
         }
 
         public void UseSelfAggregate<T>(ProjectionLifecycle? lifecycle = null) where T : Aggregate
@@ -62,14 +64,6 @@ namespace EventSourcing.Tests.DBContexts
         public void UseProjection<T>() where T : IProjection, new()
         {
             Options.Projections.Add(new T());
-        }
-        
-        public void Dispose()
-        {
-            foreach (var disposable in Disposables)
-            {
-                disposable.Dispose();
-            }
         }
     }
 }

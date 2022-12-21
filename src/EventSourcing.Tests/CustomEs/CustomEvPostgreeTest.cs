@@ -11,12 +11,12 @@ using Xunit.Extensions.Ordering;
 
 namespace EventSourcing.Tests.CustomEs
 {
-    public class CustomEvPostgreeTest : IClassFixture<PostgreeDBContextFixture>
+    public class CustomEvPostgreeTest : IClassFixture<PostgreDBContextFixture>
     {
         private readonly ICustomEsRepository<Account> _repository;
         private readonly JsonEventSerializer _serializer;
 
-        public CustomEvPostgreeTest(PostgreeDBContextFixture dbContext) 
+        public CustomEvPostgreeTest(PostgreDBContextFixture dbContext) 
         {
             _serializer = new JsonEventSerializer();
             _repository = new CustomEsRepository<Account>(dbContext.PostgreeDbContext, _serializer);
