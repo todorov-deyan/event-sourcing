@@ -9,7 +9,7 @@ using StoreOptions = Marten.StoreOptions;
 
 namespace EventSourcing.Tests.DBContexts
 {
-    public class MartenDbFixture  : PostgresSql
+    public class MartenDbFixture : PostgresSql, IDisposable
     {
         private DocumentStore _store;
 
@@ -64,6 +64,16 @@ namespace EventSourcing.Tests.DBContexts
         public void UseProjection<T>() where T : IProjection, new()
         {
             Options.Projections.Add(new T());
+        }
+
+        public override void Dispose()
+        {
+            foreach (var item in Disposables)
+            {
+                item.Dispose();
+            }
+
+            base.Dispose();
         }
     }
 }
